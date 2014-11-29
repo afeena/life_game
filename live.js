@@ -21,12 +21,10 @@ function draw_gen(generation){
 
 
 function make_cell(x,y){
-	this.x = x,
-	this.y = y,
-	this.draw = true
-	
+	this.x = x;
+	this.y = y;
+	this.draw = true;
 }
-
 
 function Game(){
 	this.first_gen = [];
