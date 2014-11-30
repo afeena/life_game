@@ -1,7 +1,5 @@
- body = document.getElementById('body');
- canvas = document.createElement('canvas');
- 
- ctx = canvas.getContext('2d');
+ var canvas = document.createElement('canvas');
+ var ctx = canvas.getContext('2d');
  canvas.width = 100;
  canvas.height = 100;
 
@@ -20,16 +18,15 @@ function draw_gen(generation){
 
 
 
-function make_cell(x,y){
+function make_cell(x,y,draw){
 	this.x = x;
 	this.y = y;
-	this.draw = true;
+	this.draw = draw;
 }
 
 function Game(){
-	this.first_gen = [];
-	this.prev_gen = [];
-	this.new_gen = [];
+	this.prev_gen = new Array();
+	this.new_gen = new Array();
 }
 
 
@@ -37,21 +34,20 @@ Game.prototype.init_game=function(){
 	
 	for (var i=0; i<100;i++){
 		for (var j=0;j<100;j++){
-			var cell = new make_cell(i,j);
-			if(Math.random()<0.5){cell.draw=false;}
-			this.first_gen.push(cell);
+			var cell = new make_cell(i,j,Math.random()<0.5);
+			
+			this.prev_gen.push(cell);
 		}
 	}
-	draw_gen(this.first_gen);
-	this.prev_gen=this.first_gen.slice();
-}
+	
+	draw_gen(this.prev_gen);
+	}
 
 
 
 Game.prototype.make_gen=function(){
 	
-	this.new_gen=this.prev_gen.slice();
-	this.new_gen.forEach(function(element,index,array){
+	this.new_gen=this.prev_gen.map(function(element,index,array){
 		var n_alive = 0;
 		var offset=100;
 	
@@ -74,11 +70,13 @@ Game.prototype.make_gen=function(){
 				element.draw=true
 			}
 		}
+	return element;
 	});
-    
+   
 	draw_gen(this.new_gen);
-	this.prev_gen=this.new_gen.slice();
-};
+	this.prev_gen= JSON.parse(JSON.stringify(this.new_gen));
+	
+	};
 
 
 var game = new Game;
